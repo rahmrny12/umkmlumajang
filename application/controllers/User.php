@@ -39,6 +39,8 @@ class User extends CI_Controller
             $nama_barang = !empty($this->input->post('nama_barang')) ? $this->input->post('nama_barang') : 0;
             $harga = !empty($this->input->post('harga')) ? $this->input->post('harga') : 0;
             $stok = !empty($this->input->post('stok')) ? $this->input->post('stok') : 0;
+            $alamat = !empty($this->input->post('alamat')) ? $this->input->post('alamat') : 0;
+            $wa = !empty($this->input->post('wa')) ? $this->input->post('wa') : 0;
             // $foto = !empty($this->input->post('foto_barang')) ? $this->input->post('foto_barang') : 0;
             $tanggal = !empty($this->input->post('tanggal')) ? $this->input->post('tanggal') : 0;
 
@@ -63,6 +65,8 @@ class User extends CI_Controller
 			$data_table1 = array(
                 'kode_barang' => $kode,
                 'nama_barang' => $nama_barang,
+                'alamat' => $alamat,
+                'wa' => $wa,
                 'foto_barang' => $foto,
                 'tanggal' => $tanggal,
 				'harga' => $harga
@@ -72,7 +76,7 @@ class User extends CI_Controller
 
             $id_barang = $this->db->insert_id();
 
-			for ($i = 2; $i <= 4; $i++) {
+			for ($i = 1; $i <= 5; $i++) {
                 if (isset($_FILES['foto_barang_' . $i]['name']) && !empty($_FILES['foto_barang_' . $i]['name'])) {
                     if ($this->upload->do_upload('foto_barang_' . $i)) {
                         $data_upload = $this->upload->data();
@@ -120,31 +124,46 @@ class User extends CI_Controller
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->model('Model_user', 'get_all_data');
         $data['items'] = $this->get_all_data->get_all_data($keyword);
+        // var_dump($data['items'][0]);die;
 
         $this->load->view('lapak', $data);
     }
 
-    public function pembayaran($idProduk = null)
+    public function pembayaran()
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->model('Model_user', 'get_all_data');
         $data['items'] = $this->get_all_data->get_all_data();
 		$data['bank'] = $this->db->from('data_bank')->get()->result();
 
-		$data['itemProduk'] = $this->get_all_data->getId($idProduk);
+		// $data['itemProduk'] = $this->get_all_data->getId($idProduk);
+
+		$data['itemProduk'] = $this->db->select(['keranjang.*', 'barang.*', 'gudang.*'])->from('keranjang')->where(['id_user' =>$data['user']['id']])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->result_array();
 
         $this->load->view('user/pembayaran', $data);
     }
 
 	public function simpan_pembayaran()
 	{
+		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		$jumlahtransaksi = $this->db->from('pembayaran')->get()->num_rows();
 
-		$input = $this->input->post();
+		$input['id_user'] = $data['user']['id'];
 		$input['no_transaksi'] = date('Ymd') . '-' . ($jumlahtransaksi + 1);
 
 		$this->db->insert('pembayaran', $input);
 		$insert_id = $this->db->insert_id();
+
+		$itemProduk = $this->db->select(['keranjang.*', 'barang.*', 'gudang.*'])->from('keranjang')->where(['id_user' =>$data['user']['id']])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->result_array();
+
+		foreach ($itemProduk as $produk) {
+			$detail = [
+				'no_transaksi' => $input['no_transaksi'],
+				'id_barang' => $produk['id_barang'],
+				'kuantitas' => $produk['kuantitas'],
+			];
+			$this->db->insert('detail_transaksi', $detail);
+		}
 
 		return $this->output->set_content_type('application/json')
 		->set_status_header(200)
@@ -160,11 +179,17 @@ class User extends CI_Controller
         $data['items'] = $this->get_all_data->get_all_data();
 
 		$data['pembayaran'] = $this->db->from('pembayaran')->where('id', $idTransaksi)->get()->row();
-		$data['bank'] = $this->db->from('data_bank')->where('id', $data['pembayaran']->bank)->get()->result();
-		$data['itemProduk'] = $this->db->select(['barang.id as id', 'barang.*', 'gudang.harga as harga'])
-			->from('barang')
-			->join('gudang', 'gudang.id_barang = barang.id', 'left')
-			->where('barang.id', $data['pembayaran']->id_barang)->get()->row();
+		$data['itemProduk'] = $this->db->select(['pembayaran.*', 'detail_transaksi.*', 'barang.*'])
+			->from('pembayaran')
+			->join('detail_transaksi', 'detail_transaksi.no_transaksi = pembayaran.no_transaksi', 'left')
+			->join('barang', 'barang.id = detail_transaksi.id_barang', 'left')
+			->where('pembayaran.id', $idTransaksi)->get()->result();
+		
+		// $data['itemProduk'] = $this->db->select(['barang.id as id', 'barang.*', 'gudang.harga as harga'])
+		// 	->from('barang')
+		// 	->join('pembayaran', 'pembayaran.id = barang.id', 'left')
+		// 	->join('gudang', 'gudang.id_barang = barang.id', 'left')
+		// 	->where('barang.id', $data['pembayaran']->id_barang)->get()->result();
 		//var_dump($data['pembayaran']);die;
 
         $this->load->view('user/bukti_transaksi', $data);
@@ -201,7 +226,7 @@ class User extends CI_Controller
 	{
         $user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
-		$config["allowed_types"] = "*";
+		$config["allowed_types"] ="*";
 		$config['max_size'] = '4096';
 		$config['upload_path'] = './assets/uploads/';
 		$config['encrypt_name'] = TRUE;
@@ -244,11 +269,10 @@ class User extends CI_Controller
 
 
 		if(empty($this->input->post('id'))){
-			$data = array_merge($data, [
+			array_push($data, [
 				'ktp' => $this->ktp['file_name'],
 				'kk' => $this->kk['file_name'],
 			]);
-			
 			$this->Model_biodata->add_data_diri($data);
 		} else {
 			$this->db->where('id', $this->input->post('id'));
@@ -312,7 +336,7 @@ class User extends CI_Controller
 		];
 
 		if(empty($this->input->post('id'))){
-			$data = array_merge($data, [
+			array_push($data, [
 				'foto_nib' => $this->foto_nib['file_name'],
 				'foto_produk' => $this->foto_produk['file_name'],
 			]);
@@ -397,7 +421,7 @@ class User extends CI_Controller
 		];
 
 		if(empty($this->input->post('id'))){
-			$data = array_merge($data, [
+			array_push($data, [
 				'upload_npwp_pemilik' => $this->upload_npwp_pemilik['file_name'],
 				'upload_bpom' => $this->upload_bpom['file_name'],
 				'upload_sertifikat_halal' => $this->upload_sertifikat_halal['file_name'],
@@ -415,8 +439,8 @@ class User extends CI_Controller
 
 	public function add_to_cart() {
 		$user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-		$id_barang = !empty($this->input->post('id_barang')) ? $this->input->post('id_barang') : 0;
-		$kuantitas = !empty($this->input->post('kuantitas')) ? $this->input->post('kuantitas') : 0;
+		$id_barang = !empty($this->input->get('id_barang')) ? $this->input->get('id_barang') : 0;
+		$kuantitas = !empty($this->input->get('kuantitas')) ? $this->input->get('kuantitas') : 1;
 		
 		$data = array(
 			'id_user' => $user['id'],
@@ -437,21 +461,16 @@ class User extends CI_Controller
 			$id_keranjang = $this->db->insert_id();
 		}
 
-		$keranjang = $this->db->select('*')->from('keranjang')->where(['keranjang.id' => $id_keranjang])->join('barang', 'barang.id = keranjang.id_barang')->get()->row_array();
+		$keranjang = $this->db->select(['keranjang.*', 'barang.*', 'gudang.harga'])->from('keranjang')->where(['keranjang.id' => $id_keranjang])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->row_array();
 
-		if ($result) {
-			echo json_encode([
-				'data' => $keranjang,
-				'status' => 'SUCCESS'
-			]);		
-		}	
+		return redirect('/user/list_produk');
 	}
 
 	public function list_produk()
     {
 		$user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 		
-		$data['keranjang'] = $this->db->select('*')->from('keranjang')->where(['id_user' => $user['id']])->join('barang', 'barang.id = keranjang.id_barang')->get()->result_array();
+		$data['keranjang'] = $this->db->select(['keranjang.*', 'barang.*', 'gudang.*'])->from('keranjang')->where(['id_user' => $user['id']])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->result_array();
 		
         $this->load->view('admin/list_produk', $data);
     }
@@ -482,4 +501,15 @@ class User extends CI_Controller
 			echo json_encode($this->upload->display_errors(), 400);
 		}
 	}
+	
+	public function produk()
+    {
+		$keyword = $this->input->get('keyword');
+		$data['title'] = 'Produk Page';
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->load->model('Model_user', 'get_all_data');
+        $data['items'] = $this->get_all_data->get_all_data($keyword);
+
+        $this->load->view('produk', $data);
+    }
 }

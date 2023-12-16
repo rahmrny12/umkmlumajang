@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="cache-control" content="no-cache, must-revalidate">
 	<meta charset="utf-8">
-	<title>Lapak Page</title>
+	<title><?= $title; ?></title>
 	<meta name="description" content="Morden Bootstrap HTML5 Template">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- <link rel="shortcut icon" type="image/x-icon" href="<?= base_url(); ?>assets/home/lapak/suruchi/assets/img/favicon.ico"> -->
@@ -21,32 +21,7 @@
 	<link rel="stylesheet" href="<?= base_url(); ?>assets/home/lapak/suruchi/assets/css/style.css">
 
 	<style>
-		.lightbox {
-		z-index: 999;
-		display: none;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.7);
-		}
-
-		.lightbox-content {
-		display: block;
-		margin: auto;
-		max-width: 80%;
-		max-height: 80%;
-		}
-
-		.close-btn {
-		position: absolute;
-		top: 15px;
-		right: 15px;
-		font-size: 30px;
-		color: #fff;
-		cursor: pointer;
-		}
+		/* .product__media--preview  */
 	</style>
 
 </head>
@@ -143,7 +118,7 @@
 									<a class="header__menu--link" href="#umkm">Umkm</a>
 								</li>
 								<li class="header__menu--items style2 d-none d-xl-block">
-									<a class="header__menu--link" href="<?= base_url('user/produk'); ?>">Produk</a>
+									<a class="header__menu--link" href="#produk">Produk</a>
 								</li>
 							</ul>
 						</nav>
@@ -160,7 +135,7 @@
 								</a>
 							</li>
 							<li class="header__account--items header__account2--items">
-								<a class="header__account--btn minicart__open--btn" href="<?= base_url('user/list_produk/') ?>" data-offcanvas>
+								<a class="header__account--btn minicart__open--btn" href="<?= base_url(); ?>user/list_produk" data-offcanvas>
 									<svg xmlns="http://www.w3.org/2000/svg" width="26.51" height="23.443" viewBox="0 0 14.706 13.534">
 										<g transform="translate(0 0)">
 											<g>
@@ -265,90 +240,6 @@
 
 	<main class="main__content_wrapper">
 
-	<!-- Start slider section -->
-	<section class="hero__slider--section" id="hero">
-			<div class="hero__slider--inner hero__slider--activation swiper">
-				<div class="hero__slider--wrapper swiper-wrapper">
-					<div class="swiper-slide ">
-						<div class="hero__slider--items home1__slider--bg">
-							<div class="container-fluid">
-								<div class="hero__slider--items__inner">
-									<div class="row row-cols-1">
-										<div class="col">
-											<div class="slider__content" style="height: 200px">
-												<!-- <p class="slider__content--desc desc1 mb-15">
-													<img class="slider__text--shape__icon" src="assets/img/icon/text-shape-icon.png" alt="text-shape-icon"> New Collection</p> 
-												<h2 class="slider__content--maintitle h1 text-white">The Great Fashion <br>
-													Collection 2022</h2>
-												<p class="slider__content--desc desc2 d-sm-2-none mb-40">Up To 40% Off Final Sale Items. <br>
-													Caught in the Moment!</p>    
-												<a class="slider__btn primary__btn" href="shop.html">Show Collection
-													<svg class="primary__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2" viewBox="0 0 6.2 6.2">
-													<path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z" transform="translate(-4 -4)" fill="currentColor"></path>
-													</svg>
-												</a> -->
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide ">
-						<div class="hero__slider--items home1__slider--bg two">
-							<div class="container-fluid">
-								<div class="row">
-									<div class="col">
-										<div class="hero__slider--items__inner">
-											<div class="slider__content" style="height: 200px">
-												<!-- <p class="slider__content--desc desc1 mb-15"><img class="slider__text--shape__icon" src="assets/img/icon/text-shape-icon.png" alt="text-shape-icon"> New Collection</p> 
-												<h2 class="slider__content--maintitle h1 text-white">The Great Fashion <br>
-													Collection 2022</h2>
-												<p class="slider__content--desc desc2 d-sm-2-none mb-40 ">Up To 40% Off Final Sale Items. <br>
-													Caught in the Moment!</p>    
-												<a class="primary__btn slider__btn" href="shop.html">Show Collection
-													<svg class="slider__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2" viewBox="0 0 6.2 6.2">
-													<path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z" transform="translate(-4 -4)" fill="currentColor"></path>
-													</svg>
-												</a> -->
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide ">
-						<div class="hero__slider--items home1__slider--bg three">
-							<div class="container-fluid">
-								<div class="row">
-									<div class="col-lg-6 offset-lg-6">
-										<div class="hero__slider--items__inner">
-											<div class="slider__content text-center" style="height: 200px">
-												<!-- <p class="slider__content--desc desc1 mb-15"><img class="slider__text--shape__icon" src="assets/img/icon/text-shape-icon.png" alt="text-shape-icon"> New Collection</p> 
-												<h2 class="slider__content--maintitle h1 text-white">The Great Fashion <br>
-													Collection 2022</h2>
-												<p class="slider__content--desc desc2 d-sm-2-none mb-40">Up To 40% Off Final Sale Items. <br>
-													Caught in the Moment!</p>    
-												<a class="primary__btn slider__btn" href="shop.html">Show Collection
-													<svg class="slider__btn--arrow__icon" xmlns="http://www.w3.org/2000/svg" width="20.2" height="12.2" viewBox="0 0 6.2 6.2">
-													<path d="M7.1,4l-.546.546L8.716,6.713H4v.775H8.716L6.554,9.654,7.1,10.2,9.233,8.067,10.2,7.1Z" transform="translate(-4 -4)" fill="currentColor"></path>
-													</svg>
-												</a> -->
-											</div>
-										</div>
-									</div>
-								</div>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="swiper__nav--btn swiper-button-next"></div>
-				<div class="swiper__nav--btn swiper-button-prev"></div>
-			</div>
-		</section>
-		<!-- End slider section -->
 	
 		<!-- Start banner section -->
 		<!-- <section class="banner__section section--padding pt-0">
@@ -369,7 +260,7 @@
 		<section class="product__section section--padding pt-5" id="umkm">
 			<div class="container-fluid">
 				<div class="section__heading mb-35">
-					<h2 class="section__heading">Produk Yang Paling Diminati</h2>
+					<!--<h2 class="section__heading">Produk Yang Paling Diminati</h2>-->
 				</div>
 				<div class="tab_content">
 					<!-- // SEARCHING -->
@@ -405,7 +296,7 @@
 												</div>
 												<ul class="product__items--action d-flex">
 													<li class="product__items--action__list">
-														<a class="product__items--action__btn add__to--cart" href="<?= base_url(); ?>user/add_to_cart?id_barang=<?= $dk['id'] ?>">
+														<a class="product__items--action__btn add__to--cart" href="<?= base_url(); ?>user/list_produk">
 															<svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="20.443" viewBox="0 0 14.706 13.534">
 																<g transform="translate(0 0)">
 																	<g>
@@ -520,15 +411,18 @@
 						<div class="quickview__product--media product__details--media">
 							<div class="product__media--preview swiper">
 								<div class="swiper-wrapper">
-								    <div class="product__media--preview__items">
-										<img class="product__media--preview__items--img" alt="product-media-img">
-										<div class="product__media--view__icon">
-											<a class="product__media--view__icon--link glightbox" href="" data-gallery="product-media-preview">
-												<svg class="product__media--view__icon--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512">
-													<path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
-													<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path>
-												</svg>
-											</a>
+									<div class="swiper-slide">
+										<div class="product__media--preview__items">
+											<!--<a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href=""><img class="product__media--preview__items--img" alt="product-media-img"></a>-->
+											<img class="foto_barang product__media--preview__items--img" src="<?= base_url();?>assets/suruci/img/product/big-product5.jpg" alt="product-media-img">
+											<div class="product__media--view__icon">
+												<a class="product__media--view__icon--link glightbox" href="" data-gallery="product-media-preview">
+													<svg class="product__media--view__icon--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512">
+														<path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path>
+														<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path>
+													</svg>
+												</a>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -584,12 +478,8 @@
 			</div>
 		</div>
 	</div>
+
 	<!-- Quickview Wrapper End -->
-	
-	<div id="lightbox" class="lightbox" onclick="closeLightbox()">
-		<span class="close-btn" onclick="closeLightbox()">&times;</span>
-		<img id="lightbox-img" class="lightbox-content">
-	</div>
 
 	<!-- Scroll top bar -->
 	<button id="scroll__top"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
@@ -615,7 +505,6 @@
 			const galeri_2 = $(this).data('galeri-2');
 			$(".product__details--info__title").text(nama_barang);
 			$(".product__details--info__desc").text(harga);
-			$(".add__to--cart").attr('href', "<?= base_url(); ?>user/add_to_cart?id_barang=<?= $dk['id'] ?>" + id_barang);
 			$(".quickview__cart--btn").attr('href', "<?= base_url('user/pembayaran/') ?>" + id_barang);
 			$(".product__media--preview__items--img").attr('src', '<?= base_url('assets/sb-admin/img/') ?>' + foto_barang);
 			$(".galeri_1").attr('src', galeri_1 !== '' ? '<?= base_url('assets/sb-admin/img/') ?>' + galeri_1 : '<?= base_url('assets/home/lapak/suruchi/assets/img/product/small-product7.png') ?>');
@@ -625,26 +514,6 @@
 		$('.product__media--nav__items').on('click', 'img', function() {
 			const imgSrc = $(this).attr('src');
 			$('.product__media--preview__items--img').attr('src', imgSrc);
-		});
-		
-		$('.product__media--preview__items--img').on('click', function() {
-			const lightbox = document.getElementById('lightbox');
-			const lightboxImg = document.getElementById('lightbox-img');
-
-			lightboxImg.src = $(this).attr('src');
-			lightbox.style.display = 'flex';
-		});
-
-		function closeLightbox() {
-			const lightbox = document.getElementById('lightbox');
-			lightbox.style.display = 'none';
-		}
-
-		// Close lightbox when the user clicks outside the image	
-		document.getElementById('lightbox').addEventListener('click', function (event) {
-			if (event.target.id === 'lightbox' || event.target.className === 'close-btn') {
-				closeLightbox();
-			}
 		});
 
 		

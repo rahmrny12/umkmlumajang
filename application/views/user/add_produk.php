@@ -12,7 +12,7 @@
           </div>
           <div class="mb-3">
             <label for="kode_barang" class="form-label">Kode Barang</label>
-            <input type="text" class="form-control" id="kode_barang" name="kode_barang" value="">
+            <input type="text" class="form-control" id="kode_barang" name="kode_barang" value="" required>
           </div>
           <div class="mb-3">
             <label for="nama_barang" class="form-label">Nama Barang</label>
@@ -25,6 +25,14 @@
           <div class="mb-3">
             <label for="stok" class="form-label">Jumlah Barang</label>
             <input type="text" class="form-control" id="stok" name="stok" value="">
+          </div>
+          <div class="mb-3">
+            <label for="stok" class="form-label">Alamat</label>
+            <input type="text" class="form-control" id="alamat" name="alamat" value="">
+          </div>
+          <div class="mb-3">
+            <label for="stok" class="form-label">WhatsApp</label>
+            <input type="text" class="form-control" id="wa" name="wa" value="">
           </div>
           <div class="mb-3">
             <label for="foto_barang" class="form-label">Foto Barang</label>
