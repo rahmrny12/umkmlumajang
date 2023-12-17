@@ -83,6 +83,11 @@
 					<span>Biodata</span></a>
 			</li>
             <li class="nav-item">
+                <a class="nav-link" href="<?= base_url(); ?>admin/riwayat_transaksi">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Riwayat Transaksi</span></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="<?= base_url(); ?>user/add_produk">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Tambah Produk</span></a>

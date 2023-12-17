@@ -88,7 +88,7 @@
                                 <tbody class="cart__table--body">
                                     <?php $total = 0; ?>
                                     <?php foreach ($itemProduk as $produk): ?>
-                                        <?php $total += intval(substr($produk['harga'], 3)) ?>
+                                        <?php $total += intval(str_replace('.', '', substr($produk['harga'], 3))) ?>
                                         <tr class="cart_table--body_items">
                                             <td class="cart_table--body_list col-lg-2">
                                                 <div class="product__image two  d-flex align-items-center">
@@ -138,10 +138,12 @@
                             <br>
                             <div class="d-flex justify-content-end">
                                 <div class="d-flex flex-column align-items-end">
-                                <span class="text-lg mb-4">Total : Rp. <?= $total ?></span>
-                                <button
-                                    class="continue_shipping--btn primary_btn border-radius-5 action_buat_pesanan text-white bg-primary"
-                                    type="button">Buat Pesanan</button>
+                                    <h3 class="text-lg mb-4">Total : Rp.
+                                        <?= $total ?>
+                                    </h3>
+                                    <button
+                                        class="continue_shipping--btn primary_btn border-radius-5 action_buat_pesanan text-white bg-primary"
+                                        type="button">Buat Pesanan</button>
                                 </div>
                             </div>
                         </form>
@@ -171,7 +173,7 @@
     <script>
         $('.action_buat_pesanan').on('click', () => {
             $.ajax({
-                type: 'POST',   
+                type: 'POST',
                 url: "<?= base_url('user/simpan_pembayaran') ?>",
                 success: function (res) {
                     alert('Transaksi Tersimpan');

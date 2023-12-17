@@ -8,14 +8,14 @@ class User extends CI_Controller
 		parent::__construct();
 		$this->load->model('Model_biodata');
         // $this->load->model('Model_user', 'model');
+
+		if(empty($this->session->userdata('email'))){
+			redirect('auth/login');
+		}
     }
 
     public function index()
     {
-		if(empty($this->session->userdata('email'))){
-			redirect('auth/login');
-		}
-
         $data['title'] = 'Dashboard';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
         $this->load->view('templates/sb_header_user', $data);
@@ -151,19 +151,26 @@ class User extends CI_Controller
 		$input['id_user'] = $data['user']['id'];
 		$input['no_transaksi'] = date('Ymd') . '-' . ($jumlahtransaksi + 1);
 
+		$itemProduk = $this->db->select(['keranjang.*', 'barang.*', 'gudang.harga'])->from('keranjang')->where(['id_user' =>$data['user']['id']])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->result_array();
+
 		$this->db->insert('pembayaran', $input);
 		$insert_id = $this->db->insert_id();
 
-		$itemProduk = $this->db->select(['keranjang.*', 'barang.*', 'gudang.*'])->from('keranjang')->where(['id_user' =>$data['user']['id']])->join('barang', 'barang.id = keranjang.id_barang')->join('gudang', 'barang.id = gudang.id_barang')->get()->result_array();
-
+		$total = 0;
 		foreach ($itemProduk as $produk) {
+			$harga = intval(str_replace('.', '', substr($produk['harga'], 3))) * $produk['kuantitas'];
+			$total += $harga;
 			$detail = [
 				'no_transaksi' => $input['no_transaksi'],
 				'id_barang' => $produk['id_barang'],
 				'kuantitas' => $produk['kuantitas'],
+				'total_harga' => $harga,
 			];
 			$this->db->insert('detail_transaksi', $detail);
 		}
+
+		$this->db->where('no_transaksi', $input['no_transaksi']);
+		$this->db->update('pembayaran', ['total_transaksi' => $total]);
 
 		return $this->output->set_content_type('application/json')
 		->set_status_header(200)
@@ -179,10 +186,11 @@ class User extends CI_Controller
         $data['items'] = $this->get_all_data->get_all_data();
 
 		$data['pembayaran'] = $this->db->from('pembayaran')->where('id', $idTransaksi)->get()->row();
-		$data['itemProduk'] = $this->db->select(['pembayaran.*', 'detail_transaksi.*', 'barang.*'])
+		$data['itemProduk'] = $this->db->select(['pembayaran.*', 'detail_transaksi.*', 'barang.*', 'gudang.harga'])
 			->from('pembayaran')
 			->join('detail_transaksi', 'detail_transaksi.no_transaksi = pembayaran.no_transaksi', 'left')
 			->join('barang', 'barang.id = detail_transaksi.id_barang', 'left')
+			->join('gudang', 'gudang.id_barang = barang.id', 'left')
 			->where('pembayaran.id', $idTransaksi)->get()->result();
 		
 		// $data['itemProduk'] = $this->db->select(['barang.id as id', 'barang.*', 'gudang.harga as harga'])
@@ -435,6 +443,21 @@ class User extends CI_Controller
 			$this->db->update('data_lain', $data);
 		}
 		return redirect('user/biodata');
+	}
+
+	public function remove_from_cart() {
+		$user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+		$id_barang = !empty($this->input->get('id_barang')) ? $this->input->get('id_barang') : 0;
+		
+		$where = array(
+			'id_user' => $user['id'],
+			'id_barang' => $id_barang,
+		);
+
+		$result = $this->db->delete('keranjang', $where);
+		
+		return redirect('/user/list_produk');
 	}
 
 	public function add_to_cart() {

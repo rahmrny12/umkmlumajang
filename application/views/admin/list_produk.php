@@ -79,7 +79,7 @@
 						</a>
 					</div>
 					<div class="main__logo">
-						<h1 class="main__logo--title"><a class="main__logo--link" href="<?= base_url(); ?>home"><h2 class="text-dark m-0"><img class="me-6">UMKMLUMAJANG</h2></a></h1>
+						<h1 class="main__logo--title"><a class="main__logo--link" href="<?= base_url(); ?>user/lapak"><h2 class="text-dark m-0"><img class="me-6">UMKMLUMAJANG</h2></a></h1>
 					</div>
 
 
@@ -251,28 +251,36 @@
                                     </tr>
                                 </thead>
                                 <tbody class="cart__table--body">
-                                    <?php foreach ($keranjang as $data) : ?>
-										<tr class="cart__table--body__items">
-                                        <td class="cart__table--body__list">
-                                            <div class="cart__product d-flex align-items-center">
-                                                <button class="cart__remove--btn" aria-label="search button" type="button">
-                                                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="16px" height="16px"><path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/></svg>
-                                                </button>
-                                                <div class="cart__thumbnail">
-                                                    <a href="#"><img class="border-radius-5" src="<?= base_url('assets/sb-admin/img/') . $data['foto_barang']; ?>" 	alt="cart-product"></a>
+                                    <?php if (count($keranjang) > 0) : ?>
+                                        <?php foreach ($keranjang as $data) : ?>
+                                            <tr class="cart__table--body__items">
+                                            <td class="cart__table--body__list">
+                                                <div class="cart__product d-flex align-items-center">
+                                                    <a href="<?= base_url(); ?>user/remove_from_cart?id_barang=<?= $data['id_barang'] ?>" class="cart__remove--btn" aria-label="search button" type="button">
+                                                        <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="16px" height="16px"><path d="M 4.7070312 3.2929688 L 3.2929688 4.7070312 L 10.585938 12 L 3.2929688 19.292969 L 4.7070312 20.707031 L 12 13.414062 L 19.292969 20.707031 L 20.707031 19.292969 L 13.414062 12 L 20.707031 4.7070312 L 19.292969 3.2929688 L 12 10.585938 L 4.7070312 3.2929688 z"/></svg>
+                                                    </a>
+                                                    <div class="cart__thumbnail">
+                                                        <a href="#"><img class="border-radius-5" src="<?= base_url('assets/sb-admin/img/') . $data['foto_barang']; ?>" 	alt="cart-product"></a>
+                                                    </div>
+                                                    <div class="cart__content">
+                                                        <h4 class="cart__content--title"><a href="#" data-id-barang="<?= $data['id']; ?>" ><?= $data['nama_barang'] ?></a></h4>
+                                                        <!--<span class="cart__content--variant">COLOR: Blue</span>-->
+                                                        <!--<span class="cart__content--variant">WEIGHT: 2 Kg</span>-->
+                                                    </div>
                                                 </div>
-                                                <div class="cart__content">
-                                                    <h4 class="cart__content--title"><a href="#" data-id-barang="<?= $data['id']; ?>" ><?= $data['nama_barang'] ?></a></h4>
-                                                    <!--<span class="cart__content--variant">COLOR: Blue</span>-->
-                                                    <!--<span class="cart__content--variant">WEIGHT: 2 Kg</span>-->
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="cart__table--body__list">
-                                            <span class="cart__price"><?= $data['harga']; ?></span>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
+                                            </td>
+                                            <td class="cart__table--body__list">
+                                                <span class="cart__price"><?= $data['harga']; ?></span>
+                                            </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <tr class="cart__table--body__items">
+                                            <td colspan="2">
+                                                <h5 class="my-5 text-center">Keranjang Kosong</h5>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
                                     <tr>
                                         <td colspan="2" class="cart__table--body__list text-right">
                                             <a class="quickview__cart--btn primary__btn" href="<?= base_url('user/pembayaran') ?>">Checkout</a>

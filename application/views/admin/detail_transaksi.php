@@ -157,9 +157,6 @@
                             <button
                                 class="continue_shipping--btn primary_btn border-radius-5 action_download_struk text-white bg-primary"
                                 type="button">Download Struk</button>
-                                <a href="https://wa.me/6287701165255?text=Assalamualaikum,%20Saya%20ingin%20mengkonfirmasi%20transaksi%20pada%20website%20Lumajang%20Tulen.%20Berikut%20struk%20transaksi%20saya."
-                                class="continue_shipping--btn primary_btn border-radius-5 action_hubungi_admin text-white bg-success"
-                                type="button">Hubungi Admin</a>
                         </div>
                     </main>
                     <br>
@@ -189,7 +186,6 @@
         $('.action_download_struk').on('click', () => {
             const date = new Date();
             $('.action_download_struk').addClass('d-none');
-            $('.action_hubungi_admin').addClass('d-none');
             
             html2canvas(document.getElementById('struk')).then(function(canvas) {
                 var a = document.createElement('a');
@@ -198,7 +194,6 @@
                 a.click();
 
                 $('.action_download_struk').removeClass('d-none');
-                $('.action_hubungi_admin').removeClass('d-none');
             });
         });
         
@@ -224,35 +219,6 @@
                 }
             });
         })
-
-        // $('input[name=bukti_pembayaran]').on('change', () => {
-        //     const formData = new FormData();
-        //     const fileInput = $('input[name=bukti_pembayaran]')[0].files[0];
-
-        //     formData.append('bukti_pembayaran', fileInput);
-        //     formData.append('no_transaksi', "<?= $pembayaran->no_transaksi ?>");
-
-        //     $.ajax({
-        //         url: '../../user/upload_bukti_pembayaran',
-        //         type: 'POST',
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         success: function (res) {
-        //             $("#uploadedImage").removeClass('d-none');
-        //             var reader = new FileReader();
-        //             reader.onload = function (e) {
-        //                 $('#uploadedImage').attr('src', e.target.result);
-        //             };
-        //             reader.readAsDataURL(fileInput);
-        //             alert("Bukti pembayaran berhasil diupload.")
-        //         },
-        //         error: function (res) {
-        //             $("#uploadedImage").addClass('d-none');
-        //             alert("Bukti pembayaran gagal diupload.")
-        //         },
-        //     });
-        // })
     </script>
 
     <!-- Customscript js -->
